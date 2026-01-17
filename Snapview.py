@@ -2,7 +2,7 @@ import sys
 import json
 from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog,
                                  QHBoxLayout, QMenuBar, QMenu, QStatusBar, QDialog, QFormLayout, QColorDialog, QSpinBox, QCheckBox, QDialogButtonBox)
-from PySide6.QtGui import QPixmap, QTransform, QPainter, QIcon, QAction
+from PySide6.QtGui import QPixmap, QTransform, QPainter, QIcon, QAction, QImageReader
 from PySide6.QtCore import Qt, QPoint
 
 class SettingsDialog(QDialog):
@@ -186,8 +186,16 @@ class SnapView(QMainWindow):
             self.scale_factor = self.default_zoom
             self.update_image()
 
+    def build_image_filter(self):
+        formats = {
+            bytes(image_format).decode("utf-8").lower()
+            for image_format in QImageReader.supportedImageFormats()
+        }
+        extensions = " ".join(f"*.{image_format}" for image_format in sorted(formats))
+        return f"Images ({extensions});;All Files (*)"
+
     def open_image(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Images (*.png *.jpg *.jpeg *.bmp *.gif)")
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Image", "", self.build_image_filter())
         if file_path:
             self.pixmap = QPixmap(file_path)
             self.image_label.setPixmap(self.pixmap)
@@ -208,7 +216,7 @@ class SnapView(QMainWindow):
 
     def save_image(self):
         if self.pixmap:
-            file_path, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "Images (*.png *.jpg *.jpeg *.bmp *.gif)")
+            file_path, _ = QFileDialog.getSaveFileName(self, "Save Image", "", self.build_image_filter())
             if file_path:
                 self.pixmap.save(file_path)
                 self.status_bar.showMessage(f"Image saved: {file_path}")
