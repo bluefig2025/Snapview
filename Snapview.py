@@ -91,12 +91,6 @@ class SnapView(QMainWindow):
         self.status_bar = QStatusBar(self)
         self.setStatusBar(self.status_bar)
 
-        # Image display
-        self.image_label = QLabel("No image loaded.")
-        self.image_label.setScaledContents(False)
-        self.image_label.setStyleSheet("background-color: lightgray;")
-        self.layout.addWidget(self.image_label)
-
         # Buttons
         self.open_button = QPushButton("Open Image")
         self.open_button.clicked.connect(self.open_image)
@@ -124,6 +118,14 @@ class SnapView(QMainWindow):
         self.button_layout.addWidget(self.fullscreen_button)
 
         self.layout.addLayout(self.button_layout)
+        self.layout.setStretch(0, 0)
+
+        # Image display
+        self.image_label = QLabel("No image loaded.")
+        self.image_label.setScaledContents(False)
+        self.image_label.setStyleSheet("background-color: lightgray;")
+        self.layout.addWidget(self.image_label)
+        self.layout.setStretch(1, 1)
 
         # State
         self.pixmap = None
