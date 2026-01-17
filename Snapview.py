@@ -2,7 +2,7 @@ import sys
 import json
 from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QFileDialog,
                                  QHBoxLayout, QMenuBar, QMenu, QStatusBar, QDialog, QFormLayout, QColorDialog, QSpinBox, QCheckBox, QDialogButtonBox)
-from PySide6.QtGui import QPixmap, QTransform, QPainter, QIcon, QAction, QImageReader
+from PySide6.QtGui import QColor, QPixmap, QTransform, QPainter, QIcon, QAction, QImageReader
 from PySide6.QtCore import Qt, QPoint
 
 class SettingsDialog(QDialog):
@@ -279,7 +279,7 @@ class SnapView(QMainWindow):
 
             # Create a painter to draw the pixmap with the current offset
             canvas = QPixmap(self.image_label.size())
-            canvas.fill(Qt.lightGray)
+            canvas.fill(QColor(self.bg_color))
             painter = QPainter(canvas)
             painter.drawPixmap(self.image_offset, scaled_pixmap)
             painter.end()
